@@ -1,6 +1,6 @@
 # @vulgar/storefront-ui
 
-A standalone React + TypeScript presentation package for VULGAR. Eight page components, scoped CSS Modules, local fonts, original provisional artwork, and an independent design lab. No router dependency, requests, storage, checkout, or scheduling. The public API is versioned at **0.1.0**.
+A standalone React + TypeScript presentation package for VULGAR. Eight page components, scoped CSS Modules, local fonts, original provisional artwork, and a standalone storefront demo. The presentation library has no router dependency, requests, storage, checkout, or scheduling. The public API is versioned at **0.1.0**.
 
 ## Run and integrate
 
@@ -14,7 +14,7 @@ npm run build
 npm run dev -- --port 5174
 ```
 
-`npm run dev` opens the independent preview at `http://127.0.0.1:5174`. Use the Design Lab selectors to inspect every view, five fixed viewport widths, empty states, product availability, and drop states. The iframe uses actual viewport media queries. Preview state is memory-only and resets on refresh or changing the viewport. Its fixtures and cart simulation are excluded from the library build.
+`npm run dev -- --port 5174` serves the standalone storefront at `http://127.0.0.1:5174`. Navigate with the site links and resize the browser to test responsive layouts. Query-based page and product URLs support refreshes, sharing, browser history, and GitHub Pages repository paths. The demo saves bag identifiers and quantities to localStorage and validates them against the current fixtures on load; blocked storage falls back to an in-memory bag. Collection pages show their own products. The footer identifies the concept catalog and checkout remains unavailable. Demo behavior and fixtures are excluded from the library build.
 
 Agent 1 should add this package to the consuming workspace and build it before import. React and ReactDOM 18 or 19 are peers; there are no other runtime dependencies. The package is private to prevent accidental npm publication. Root workspace wiring is intentionally left to Agent 1.
 
@@ -278,7 +278,7 @@ The creator's identity, tagline, and destinations were verified against public p
 
 ## Share the demo on GitHub Pages
 
-`npm run build:demo` builds the standalone Design Lab into `demo-dist/`.
+`npm run build:demo` builds the standalone storefront demo into `demo-dist/`.
 Relative asset paths support both a domain root and a repository subdirectory.
 The library build remains `npm run build`.
 

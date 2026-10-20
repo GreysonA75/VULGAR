@@ -8,7 +8,7 @@ export const products: StoreProduct[] = [
     slug: "demo-mask",
     name: "The witness / washed black",
     description:
-      "An original mask study, imagined as a distressed print on a washed black tee. This is a design sample; fabric, fit, price, and production details are not confirmed.",
+      "A face in the static. An original mask study in distressed monochrome, imagined on washed black.",
     priceCents: 3800,
     currency: "USD",
     images: [asset("mask-tee.png"), asset("forest-signal.png")],
@@ -27,7 +27,7 @@ export const products: StoreProduct[] = [
     slug: "demo-root",
     name: "Afterimage / heavyweight hood",
     description:
-      "An original tree engraving study on a black hooded sweatshirt. Provisional artwork and demonstration price only.",
+      "Branching roots. Lingering shadows. An original tree engraving study, imagined on a black hood.",
     priceCents: 6800,
     currency: "USD",
     images: [asset("root-hoodie.png"), asset("signal.svg")],
@@ -46,7 +46,7 @@ export const products: StoreProduct[] = [
     slug: "demo-forest",
     name: "No signal / bone",
     description:
-      "A forest transmission, imagined in black ink on bone cotton. This concept is not an announced product.",
+      "A transmission from deep in the forest. Stark black imagery against bone, carrying a little of the unknown.",
     priceCents: 3800,
     currency: "USD",
     images: [asset("forest-tee.png")],
@@ -76,7 +76,7 @@ export const drops: StoreDrop[] = [
     slug: "demo-000",
     title: "Dead air",
     description:
-      "A trace of a previous transmission. Archive concept for design demonstration.",
+      "A trace of a previous transmission. Preserved in the archive.",
     heroImage: asset("signal.svg"),
     status: "ended",
   },
