@@ -1,0 +1,63 @@
+.preview-tools {
+  font: 10px/1.4 monospace;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 10px 20px;
+  background: #e9e5d9;
+  color: #23231e;
+  position: relative;
+  z-index: 20;
+}
+.preview-tools strong {
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  margin-right: auto;
+}
+.preview-tools strong span {
+  opacity: 0.65;
+}
+.preview-tools label {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.preview-tools select {
+  font: 11px monospace;
+  color: #222;
+  background: transparent;
+  border: 1px solid #aaa799;
+  padding: 5px;
+  max-width: 160px;
+}
+.preview-tools input {
+  accent-color: #383830;
+}
+.preview-frame-wrap {
+  background: #2d2d29;
+  padding: 24px 0;
+  overflow: auto;
+  min-height: 100vh;
+}
+.preview-frame-wrap iframe {
+  display: block;
+  margin: 0 auto;
+  border: 1px solid #66665e;
+  height: calc(100vh - 100px);
+  min-height: 700px;
+  background: #10100f;
+  max-width: none;
+}
+@media (max-width: 500px) {
+  .preview-tools {
+    gap: 10px;
+    padding: 9px 12px;
+  }
+  .preview-tools strong {
+    width: 100%;
+  }
+  .preview-tools strong span {
+    display: none;
+  }
+}

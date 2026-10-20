@@ -1,0 +1,35 @@
+name: Publish VULGAR demo
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: packages/storefront-ui/package-lock.json
+      - run: npm ci
+        working-directory: packages/storefront-ui
+      - run: npm run typecheck && npm test && npm run build:demo
+        working-directory: packages/storefront-ui
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: packages/storefront-ui/demo-dist
+      - uses: actions/deploy-pages@v4
+        id: deployment
