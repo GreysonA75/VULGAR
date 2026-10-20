@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 import { beforeEach, afterEach, describe, it, expect, vi } from "vitest";
-import { render, screen, fireEvent, cleanup, act } from "@testing-library/react";
+import { render, screen, fireEvent, cleanup, act, within } from "@testing-library/react";
 import { StorefrontDemo } from "../preview/main";
 import { readRoute, routeHref, restoreCart, cartStorageKey } from "../preview/demo-state";
 
@@ -57,12 +57,33 @@ describe("standalone demo", () => {
     render(<StorefrontDemo />);
     history.replaceState(null, "", "/VULGAR/?view=drop&drop=demo-000");
     act(() => window.dispatchEvent(new PopStateEvent("popstate")));
-    expect(screen.getByRole("heading", { level: 1 }).textContent).toBe("Dead air");
-    expect(screen.getByText("Captain Clark")).toBeTruthy();
+    expect(screen.getByRole("heading", { level: 1 }).textContent).toBe("The SCP Collection");
+    expect(screen.getByText("This collection is no longer available.")).toBeTruthy();
+    expect(screen.queryByRole("button", { name: "View Captain Clark" })).toBeNull();
     expect(screen.queryByText("Smile Dog")).toBeNull();
     history.replaceState(null, "", "/VULGAR/?view=about");
     act(() => window.dispatchEvent(new PopStateEvent("popstate")));
     expect(document.title).toBe("About — VULGAR");
+  });
+
+  it("groups current and past collections and keeps the current collection complete", () => {
+    render(<StorefrontDemo />);
+    fireEvent.click(screen.getByRole("link", { name: "Collections" }));
+    const available = screen.getByRole("region", { name: "Available collections" });
+    const previous = screen.getByRole("region", { name: "Previous collections" });
+    expect(within(available).getAllByRole("button")).toHaveLength(1);
+    expect(within(previous).getAllByRole("button")).toHaveLength(2);
+    expect(within(previous).getByRole("button", { name: "Explore The SCP Collection" })).toBeTruthy();
+    expect(within(previous).getByRole("button", { name: "Explore The Tung Tung Tapes Collection" })).toBeTruthy();
+    fireEvent.click(within(available).getByRole("button", { name: "Explore The Creepypasta Collection" }));
+    for (const name of ["Smile Dog", "Russian Sleep Experiment", "Captain Clark"]) {
+      expect(screen.getByRole("button", { name: `View ${name}` })).toBeTruthy();
+    }
+    fireEvent.click(screen.getByRole("link", { name: "About" }));
+    expect(screen.getByRole("heading", { level: 1 }).textContent).toBe("Reality is darker than fiction.");
+    expect(screen.getByRole("link", { name: "contact@vulgar.example" })).toBeTruthy();
+    expect(screen.queryByText("Demo / orders closed")).toBeNull();
+    expect(screen.queryByText("This is a storefront preview. Products and prices are placeholders.")).toBeNull();
   });
 
   it("remains usable if browser storage is blocked", () => {

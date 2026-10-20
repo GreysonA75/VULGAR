@@ -34,7 +34,7 @@ const dropStatuses = {
   draft: "Preview",
   upcoming: "Upcoming",
   live: "Live now",
-  ended: "Archived",
+  ended: "Unavailable",
 };
 function Arrow() {
   return <span aria-hidden="true">↗</span>;
@@ -239,14 +239,14 @@ export function SiteShell({
           aria-label="Main navigation"
           className={`${s.navigation} ${menuOpen ? s.navigationOpen : ""}`}
         >
-          {(["shop", "about"] as const).map((item) => (
+          {(["shop", "archive", "about"] as const).map((item) => (
             <a
               key={item}
               href={paths[item]}
               aria-current={activePage === item ? "page" : undefined}
               onClick={(e) => navClick(e, () => navigate(item))}
             >
-              {item}
+              {{ shop: "All Pieces", archive: "Collections", about: "About" }[item]}
             </a>
           ))}
         </nav>
@@ -272,7 +272,7 @@ export function SiteShell({
       </main>
       <footer className={s.footer}>
         <div className={s.footerTop}>
-          <p>{footerNote}</p>
+          {footerNote && <p>{footerNote}</p>}
           <CreatorNavigation links={creatorLinks} />
         </div>
       </footer>
@@ -375,7 +375,7 @@ export type HomeViewProps = ProductNavigation & {
 export function HomeView({ featuredProducts, onProductSelect }: HomeViewProps) {
   return (
     <section className={`${s.section} ${s.catalog}`}>
-      <h1 className={s.catalogTitle}>Shop</h1>
+      <h1 className={s.catalogTitle}>All Pieces</h1>
       {featuredProducts.length ? (
         <ProductGrid products={featuredProducts} onProductSelect={onProductSelect} />
       ) : (
@@ -414,7 +414,7 @@ export function ShopView({
   const id = useId();
   return (
     <section className={s.section}>
-      <div className={s.pageHeading}><h1>Shop</h1></div>
+      <div className={s.pageHeading}><h1>All Pieces</h1></div>
       <div className={s.shopToolbar}>
         <div className={s.filters} role="group" aria-label="Filter products">
           {filters.map((f) => (
@@ -823,7 +823,7 @@ export function DropView({
             VULGAR COLLECTION
           </p>
           <h1>{drop.title}</h1>
-          <p>{drop.description}</p>
+          <p>{drop.status === "ended" ? "This collection is no longer available." : drop.description}</p>
           {releaseLabel && <p className={s.releaseLabel}>{releaseLabel}</p>}
           {drop.status === "upcoming" && countdown && (
             <div className={s.countdownWrap}>
@@ -844,12 +844,12 @@ export function DropView({
           )}
           {drop.status === "ended" && (
             <Button quiet onClick={onArchive}>
-              Return to the archive <Arrow />
+              Back to collections <Arrow />
             </Button>
           )}
         </div>
       </section>
-      <section className={s.section}>
+      {drop.status !== "ended" && <section className={s.section}>
         <SectionHeading
           eyebrow={dropStatuses[drop.status]}
           title="Products"
@@ -869,7 +869,7 @@ export function DropView({
               : "Check back for collection information."}
           </EmptyState>
         )}
-      </section>
+      </section>}
     </>
   );
 }
@@ -892,16 +892,9 @@ export function CollectionCard({
         onClick={() => onSelect(drop)}
         aria-label={`Explore ${drop.title}`}
       >
-        <div className={s.collectionArt}>
-          <Artwork src={drop.heroImage} alt="" />
-          <span className={s.collectionNumber}>
-            {String(index + 1).padStart(2, "0")}
-          </span>
-          <span className={s.badge}>{dropStatuses[drop.status]}</span>
-        </div>
         <div className={s.collectionMeta}>
           <h3>{drop.title}</h3>
-          <span>{releaseLabel ?? dropStatuses[drop.status]}</span>
+          <span>{drop.status === "ended" ? "Unavailable" : releaseLabel ?? "Available"}</span>
         </div>
       </button>
     </article>
@@ -919,28 +912,29 @@ export function ArchiveView({
   onDropSelect,
   onShop,
 }: ArchiveViewProps) {
+  const available = drops.filter((drop) => drop.status === "live" || drop.status === "upcoming");
+  const previous = drops.filter((drop) => drop.status === "ended");
   return (
     <section className={s.section}>
-      <div className={s.pageHeading}><h1>Archive</h1></div>
+      <div className={s.pageHeading}><h1>Collections</h1></div>
       {drops.length ? (
-        <div className={s.archiveGrid}>
-          {drops.map((drop, i) => (
-            <CollectionCard
-              key={drop.id}
-              drop={drop}
-              index={i}
-              releaseLabel={releaseLabels[drop.id]}
-              onSelect={onDropSelect}
-            />
-          ))}
-        </div>
+        <>
+          <section className={s.collectionGroup} aria-label="Available collections">
+            <h2>Available collections</h2>
+            {available.length ? available.map((drop) => (
+              <CollectionCard key={drop.id} drop={drop} releaseLabel={releaseLabels[drop.id]} onSelect={onDropSelect} />
+            )) : <p>No collections are available right now.</p>}
+          </section>
+          <section className={s.collectionGroup} aria-label="Previous collections">
+            <h2>Previous collections</h2>
+            {previous.length ? previous.map((drop) => (
+              <CollectionCard key={drop.id} drop={drop} onSelect={onDropSelect} />
+            )) : <p>No previous collections.</p>}
+          </section>
+        </>
       ) : (
-        <EmptyState
-          title="The record begins here."
-          action="Explore the collection"
-          onAction={onShop}
-        >
-          Past releases will be preserved in this archive.
+        <EmptyState title="The record begins here." action="View all pieces" onAction={onShop}>
+          Collections will appear here.
         </EmptyState>
       )}
     </section>
@@ -952,14 +946,11 @@ export type AboutViewProps = {
   creatorLinks?: CreatorLinks;
   onShop: () => void;
 };
-export function AboutView({ creatorLinks, onShop }: AboutViewProps) {
+export function AboutView(_props: AboutViewProps) {
   return (
-    <section className={`${s.section} ${s.aboutIntro}`}>
-      <h1>About</h1>
-      <p>Vulgar explores the disturbing corners of the internet.</p>
-      <p>This is a storefront preview. Products and prices are placeholders.</p>
-      <CreatorNavigation links={creatorLinks} />
-      <Button quiet onClick={onShop}>Back to shop <Arrow /></Button>
+    <section className={`${s.section} ${s.aboutIntro}`} aria-label="About Vulgar">
+      <h1>Reality is darker than fiction.</h1>
+      <p><a href="mailto:contact@vulgar.example">contact@vulgar.example</a></p>
     </section>
   );
 }

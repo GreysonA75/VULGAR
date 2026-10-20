@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="600" height="720" viewBox="0 0 600 720">
   <title>SMILE DOG — artwork placeholder</title>
   <rect width="600" height="720" fill="#101010"/>
-  <g fill="#9b9b9b" font-family="monospace" text-anchor="middle">
+  <g fill="#9b9b9b" font-family="Times New Roman, serif" text-anchor="middle">
     <text x="300" y="325" font-size="14">[ 01 ]</text>
     <text x="300" y="368" font-size="21">SMILE DOG</text>
     <text x="300" y="411" font-size="12" letter-spacing="2">ARTWORK TO FOLLOW</text>

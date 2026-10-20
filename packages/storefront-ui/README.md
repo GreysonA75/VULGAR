@@ -14,7 +14,7 @@ npm run build
 npm run dev -- --port 5174
 ```
 
-`npm run dev -- --port 5174` serves the standalone storefront at `http://127.0.0.1:5174`. Navigate with the site links and resize the browser to test responsive layouts. Query-based page and product URLs support refreshes, sharing, browser history, and GitHub Pages repository paths. The demo saves bag identifiers and quantities to localStorage and validates them against the current fixtures on load; blocked storage falls back to an in-memory bag. Collection pages show their own products. The footer identifies the concept catalog and checkout remains unavailable. Demo behavior and fixtures are excluded from the library build.
+`npm run dev -- --port 5174` serves the standalone storefront at `http://127.0.0.1:5174`. Navigate with the site links and resize the browser to test responsive layouts. Query-based page and product URLs support refreshes, sharing, browser history, and GitHub Pages repository paths. The All Pieces page shows the catalog. Collections groups current and past releases. About shows the tagline and the placeholder email `contact@vulgar.example`; replace this before enabling real contact. The demo saves bag identifiers and quantities to localStorage and validates them against the current fixtures on load; blocked storage falls back to an in-memory bag. Collection pages show their own products. Checkout remains unavailable. Demo behavior and fixtures are excluded from the library build.
 
 Agent 1 should add this package to the consuming workspace and build it before import. React and ReactDOM 18 or 19 are peers; there are no other runtime dependencies. The package is private to prevent accidental npm publication. Root workspace wiring is intentionally left to Agent 1.
 
@@ -25,7 +25,7 @@ import '@vulgar/storefront-ui/styles.css';
 
 Wrap exactly one page view in `SiteShell` to provide theme tokens, navigation, main landmark, skip link, and footer. Import the CSS once in the application's global layout. The built ES module preserves `"use client"` for React server-component consumers. CSS Modules are compiled; the consumer does not need a CSS Modules transform for this package. The generated `.d.ts` files preserve exact contracts.
 
-Copy approved files from `assets/` into the application's public asset directory, or import their exported package asset subpaths using the application's bundler. Pass the resulting URLs as `heroImage`, `image`, or `product.images`. **There are no hard-coded production image paths in the components.** The `/assets/…` paths belong only to the local preview. Fonts are embedded in the built CSS; no Google Fonts request is made. Preserve `assets/PIXELIFY-LICENSE.txt` when redistributing fonts.
+Copy approved files from `assets/` into the application's public asset directory, or import their exported package asset subpaths using the application's bundler. Pass the resulting URLs as `heroImage`, `image`, or `product.images`. **There are no hard-coded production image paths in the components.** The `/assets/…` paths belong only to the local preview. Fonts are embedded in the built CSS; no Google Fonts request is made. Preserve `assets/OSWALD-LICENSE.txt` and `assets/TINOS-LICENSE.txt` when redistributing fonts.
 
 ```tsx
 <SiteShell
@@ -51,7 +51,7 @@ The identifiers above are supplied by the application. `preview/main.tsx` contai
 - `ProductView` receives selected image, selected variant, quantity, final display price, purchase eligibility, submission state, feedback, and constraints. `onAddToCart()` has no arguments: the parent already owns the full selection. The parent must validate stock, eligibility, quantity, and price. Use `key={product.id}` or reset controlled selections when opening another product. Images fall back if the selected index is out of range.
 - `CartView` receives line totals and subtotal in integer USD cents; it never calculates business totals. `lineTotals` and `maxQuantities` are keyed by `StoreCartLine.key`. A missing line total renders an em dash. The parent provides `lineMessages` for stale inventory or unavailable variants, validates quantities, and owns removals. Checkout is intentionally disabled and has no payment callback.
 - `DropView` renders the supplied status, preformatted release label, and countdown parts. It does not parse dates, run timers, or decide whether a drop is live. Draft drops display “Preview”; filter drafts before supplying public content. Only upcoming drops display countdown values. Countdown is not an aria-live region, avoiding second-by-second announcements.
-- `ArchiveView` displays the array exactly as supplied. Supply only appropriate historical collections and formatted `releaseLabels`; ended does not imply sold out.
+- `ArchiveView` displays the array exactly as supplied. Supply public collections and formatted `releaseLabels`; live/upcoming collections appear under Available collections and ended collections under Previous collections. Ended collection detail pages do not show purchasable products.
 - `SiteShell` emits navigation destinations and menu state changes. Native hrefs support modified clicks; override `navigationHrefs`/`cartHref` for the application's real routes. The parent owns route changes, history, page titles, scroll restoration, and route-focus management. The mobile navigation is an inline disclosure, not a modal or focus trap. Escape closes it and returns focus to its toggle.
 - Only image loading/failure is internal component state. Native `details` handles disclosure presentation. No component stores cart/product/catalog state.
 - Merchandise cards remain inspectable when sold out. Their buttons emit the full product; the application decides the destination. There is no invented restock guarantee, shipping promise, fabric specification, edition size, or release date.
@@ -66,7 +66,7 @@ The identifiers above are supplied by the application. `preview/main.tsx` contai
 | `ProductView` | Controlled gallery, variants, quantity, purchase presentation, related products |
 | `CartView` | Full bag page, supplied totals, quantity/removal controls, unavailable checkout |
 | `DropView` | Draft, upcoming, live, and ended collection presentation |
-| `ArchiveView` | Two-column desktop archive and stacked mobile cards |
+| `ArchiveView` | Available and previous collection lists, with unavailable historical releases |
 | `AboutView` | Verified channel identity and creator links |
 | `ProductCard`, `CollectionCard` | Reusable callback-driven cards |
 | `QuantityControl` | Controlled increment/decrement presentation |
@@ -265,7 +265,7 @@ export type AboutViewProps = {
 
 ## Styling and accessibility
 
-Theme variables are scoped to the shell (see `docs/brand/DESIGN_SYSTEM.md`). No reset touches elements outside it. Set application body margin to zero in the consuming application. Display text uses bundled Pixelify Sans; body text uses Arial/Helvetica; metadata uses Courier New. Small uppercase labels are secondary, never the only place essential product information appears.
+Theme variables are scoped to the shell (see `docs/brand/DESIGN_SYSTEM.md`). No reset touches elements outside it. Set application body margin to zero in the consuming application. The VULGAR wordmark uses bundled Oswald. All other text uses bundled Tinos, a traditional serif selected to match the user’s screenshot. Small uppercase labels are secondary, never the only place essential product information appears.
 
 Keyboard focus is explicit. All buttons have accessible names, variants use `aria-pressed`, disabled variants use native disabled controls, and announcements use `role="status"`. Product galleries use labeled buttons. Empty image alt text is reserved for decorative images. Hover motion is disabled by `prefers-reduced-motion`; no blinking, autoplay, canvas effects, or continuous animation is used.
 
@@ -273,9 +273,9 @@ Media breakpoints: 900, 680, 480, and 359px. Catalogs use three columns on deskt
 
 ## Artwork status
 
-The demo has no AI illustrations, campaign images, or garment mockups. Smile Dog, Russian Sleep Experiment, and Captain Clark use plain text SVG placeholders. Final imagery must be supplied or sourced with permission. Names, prices, sizes, availability, and collections are demo data; ordering is closed.
+The storefront has no AI background, hero, campaign, or editorial illustrations. AI-generated shirt designs and garment mockups are allowed by the current user direction. Smile Dog, Russian Sleep Experiment, and Captain Clark retain text-only placeholders until the later Astra design pass; the references and task brief are saved in the local project documentation. Names, prices, sizes, availability, and collections are demo data; ordering is closed.
 
-Pixelify Sans is an open-license interim choice in the pixel/technical direction requested by the user. Neue Pixel and Ghosttech files were not supplied. The legacy optional hero/editorial props remain accepted for API compatibility, but HomeView and AboutView no longer render them.
+Oswald and Tinos are bundled locally with their licenses. Tinos follows the serif letterforms in the supplied “New Pixel” screenshot; the screenshot does not establish an exact font family. The legacy optional hero/editorial props remain accepted for API compatibility, but HomeView and AboutView no longer render them.
 
 ## Share the demo on GitHub Pages
 

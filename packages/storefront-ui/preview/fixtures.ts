@@ -58,35 +58,32 @@ export const products: StoreProduct[] = [
       available: false,
       stock: 0,
     })),
-    dropId: "demo-000",
+    dropId: "demo-001",
   },
 ];
 export const drops: StoreDrop[] = [
   {
     id: "demo-001",
     slug: "demo-001",
-    title: "Creepypasta",
+    title: "The Creepypasta Collection",
     description:
-      "Placeholder collection.",
-    heroImage: asset("smile-dog.svg"),
+      "Smile Dog, Russian Sleep Experiment, and Captain Clark.",
     status: "live",
   },
   {
     id: "demo-000",
     slug: "demo-000",
-    title: "Dead air",
+    title: "The SCP Collection",
     description:
-      "Archived placeholder.",
-    heroImage: asset("captain-clark.svg"),
+      "This collection is no longer available.",
     status: "ended",
   },
   {
     id: "demo-002",
     slug: "demo-002",
-    title: "After the last light",
+    title: "The Tung Tung Tapes Collection",
     description:
-      "More details to follow.",
-    heroImage: asset("smile-dog.svg"),
-    status: "upcoming",
+      "This collection is no longer available.",
+    status: "ended",
   },
 ];

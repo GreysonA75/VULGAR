@@ -239,7 +239,7 @@ describe("presentational contracts", () => {
     expect(button.getAttribute("aria-expanded")).toBe("true");
     fireEvent.keyDown(button, { key: "Escape" });
     expect(menu).toHaveBeenCalledWith(false);
-    fireEvent.click(screen.getByRole("link", { name: "shop" }));
+    fireEvent.click(screen.getByRole("link", { name: "All Pieces" }));
     expect(nav).toHaveBeenCalledWith("shop");
     expect(screen.getByRole("link", { name: "Bag, 3 items" })).toBeTruthy();
   });
@@ -256,14 +256,14 @@ describe("presentational contracts", () => {
         Content
       </SiteShell>,
     );
-    fireEvent.click(screen.getByRole("link", { name: "shop" }), {
+    fireEvent.click(screen.getByRole("link", { name: "All Pieces" }), {
       ctrlKey: true,
     });
     expect(nav).not.toHaveBeenCalled();
   });
   it("displays supplied countdown values and hides them for ended drops", () => {
     const props = {
-      drop: drops[2],
+      drop: { ...drops[2], status: "upcoming" as const },
       products: [],
       onProductSelect: noop,
       onArchive: noop,
@@ -290,7 +290,7 @@ describe("presentational contracts", () => {
     const { unmount } = render(
       <ArchiveView drops={[drops[1]]} onDropSelect={select} onShop={noop} />,
     );
-    fireEvent.click(screen.getByRole("button", { name: "Explore Dead air" }));
+    fireEvent.click(screen.getByRole("button", { name: "Explore The SCP Collection" }));
     expect(select).toHaveBeenCalledWith(drops[1]);
     unmount();
     const archive = render(
@@ -299,8 +299,7 @@ describe("presentational contracts", () => {
     expect(screen.getByText("The record begins here.")).toBeTruthy();
     archive.unmount();
     render(<AboutView onShop={noop} />);
-    expect(
-      screen.getByRole("link", { name: "YouTube" }).getAttribute("href"),
-    ).toBe("https://www.youtube.com/@vulg6r");
+    expect(screen.getByRole("heading", { name: "Reality is darker than fiction." })).toBeTruthy();
+    expect(screen.getByRole("link", { name: "contact@vulgar.example" }).getAttribute("href")).toBe("mailto:contact@vulgar.example");
   });
 });

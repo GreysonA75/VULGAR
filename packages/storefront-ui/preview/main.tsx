@@ -46,7 +46,7 @@ export function StorefrontDemo() {
   useEffect(() => saveCart(cart), [cart]);
   useEffect(() => {
     const title = page === "product" ? product.name : page === "drop" ? drop.title
-      : { home: "Shop", shop: "The collection", cart: "Your bag", archive: "The archive", about: "About" }[page];
+      : { home: "All Pieces", shop: "All Pieces", cart: "Your bag", archive: "Collections", about: "About" }[page];
     document.title = `${title} — VULGAR`;
     setMenu(false);
     setFeedback("");
@@ -116,7 +116,7 @@ export function StorefrontDemo() {
         archive: routeHref({ page: "archive" }), about: routeHref({ page: "about" }),
       }}
       cartHref={routeHref({ page: "cart" })}
-      footerNote="Demo / orders closed"
+      footerNote=""
     >
       {page === "home" && (
         <HomeView
@@ -224,10 +224,7 @@ export function StorefrontDemo() {
       )}
       {page === "archive" && (
         <ArchiveView
-          drops={drops.filter((d) => d.status === "ended")}
-          releaseLabels={{
-            "demo-000": "Collection / 001",
-          }}
+          drops={drops}
           onDropSelect={selectDrop}
           onShop={() => navigate("shop")}
         />
