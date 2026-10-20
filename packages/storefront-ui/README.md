@@ -273,7 +273,7 @@ Media breakpoints: 900, 680, 480, and 359px. Catalogs use three columns on deskt
 
 ## Artwork status
 
-The storefront has no AI background, hero, campaign, or editorial illustrations. AI-generated shirt designs and garment mockups are allowed by the current user direction. Smile Dog, Russian Sleep Experiment, and Captain Clark retain text-only placeholders until the later Astra design pass; the references and task brief are saved in the local project documentation. Names, prices, sizes, availability, and collections are demo data; ordering is closed.
+The storefront has no AI background, hero, campaign, or editorial illustrations. AI-generated shirt designs and garment mockups are allowed by the current user direction. Smile Dog, Tung Tung Tapes, and Captain Clark retain text-only placeholders until the later Astra design pass; the references and task brief are saved in the local project documentation. Names, prices, sizes, availability, and collections are demo data; ordering is closed.
 
 Oswald and Tinos are bundled locally with their licenses. Tinos follows the serif letterforms in the supplied “New Pixel” screenshot; the screenshot does not establish an exact font family. The legacy optional hero/editorial props remain accepted for API compatibility, but HomeView and AboutView no longer render them.
 

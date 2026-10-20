@@ -4,7 +4,7 @@ Updated 2026-10-20 for the simplified storefront. All runtime assets are local i
 
 | File | Source and use |
 | --- | --- |
-| `smile-dog.svg`, `russian-sleep-experiment.svg`, `captain-clark.svg` | Plain text placeholders, no character illustration or shirt design. Not final merchandise artwork. |
+| `smile-dog.svg`, `tung-tung-tapes.svg`, `captain-clark.svg` | Plain text placeholders, no character illustration or shirt design. Not final merchandise artwork. |
 | `oswald.ttf`, `OSWALD-LICENSE.txt` | [Google Fonts Oswald](https://github.com/google/fonts/tree/main/ofl/oswald), SIL Open Font License; wordmark only. |
 | `tinos-regular.ttf`, `TINOS-LICENSE.txt` | [Google Fonts Tinos](https://github.com/google/fonts/tree/main/ofl/tinos) and [upstream license](https://github.com/googlefonts/tinos/blob/3b4482a99b80ea5fc75f187b1be3120a3f5905b3/OFL.txt); serif interface type. |
 | `icon.svg` | Existing simple geometric V favicon. |

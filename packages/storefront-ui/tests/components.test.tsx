@@ -263,7 +263,7 @@ describe("presentational contracts", () => {
   });
   it("displays supplied countdown values and hides them for ended drops", () => {
     const props = {
-      drop: { ...drops[2], status: "upcoming" as const },
+      drop: { ...drops[0], status: "upcoming" as const },
       products: [],
       onProductSelect: noop,
       onArchive: noop,

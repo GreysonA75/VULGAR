@@ -23,19 +23,19 @@ export const products: StoreProduct[] = [
     dropId: "demo-001",
   },
   {
-    id: "russian-sleep-experiment",
-    slug: "russian-sleep-experiment",
-    name: "Russian Sleep Experiment",
+    id: "tung-tung-tapes",
+    slug: "tung-tung-tapes",
+    name: "Tung Tung Tapes",
     description:
-      "Russian Sleep Experiment placeholder. Final artwork and garment details to follow.",
+      "Tung Tung Tapes placeholder. Final artwork and garment details to follow.",
     priceCents: 6800,
     currency: "USD",
-    images: [asset("russian-sleep-experiment.svg")],
+    images: [asset("tung-tung-tapes.svg")],
     status: "available",
     variants: sizes.map((label) => ({
-      id: `sleep-${label}`,
+      id: `tapes-${label}`,
       label,
-      sku: `DEMO-SLEEP-${label}`,
+      sku: `DEMO-TAPES-${label}`,
       available: true,
       stock: 5,
     })),
@@ -67,21 +67,13 @@ export const drops: StoreDrop[] = [
     slug: "demo-001",
     title: "The Creepypasta Collection",
     description:
-      "Smile Dog, Russian Sleep Experiment, and Captain Clark.",
+      "Smile Dog, Tung Tung Tapes, and Captain Clark.",
     status: "live",
   },
   {
     id: "demo-000",
     slug: "demo-000",
     title: "The SCP Collection",
-    description:
-      "This collection is no longer available.",
-    status: "ended",
-  },
-  {
-    id: "demo-002",
-    slug: "demo-002",
-    title: "The Tung Tung Tapes Collection",
     description:
       "This collection is no longer available.",
     status: "ended",

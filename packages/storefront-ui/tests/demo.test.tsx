@@ -13,8 +13,8 @@ afterEach(() => { cleanup(); vi.restoreAllMocks(); });
 
 describe("standalone demo", () => {
   it("preserves the Pages directory in shareable URLs and handles invalid routes", () => {
-    expect(routeHref({ page: "product", slug: "russian-sleep-experiment" })).toBe("/VULGAR/?view=product&product=russian-sleep-experiment");
-    expect(readRoute("?view=product&product=russian-sleep-experiment")).toEqual({ page: "product", slug: "russian-sleep-experiment" });
+    expect(routeHref({ page: "product", slug: "tung-tung-tapes" })).toBe("/VULGAR/?view=product&product=tung-tung-tapes");
+    expect(readRoute("?view=product&product=tung-tung-tapes")).toEqual({ page: "product", slug: "tung-tung-tapes" });
     expect(readRoute("?view=unknown")).toEqual({ page: "home" });
   });
 
@@ -26,7 +26,7 @@ describe("standalone demo", () => {
       { productId: "captain-clark", variantId: "captain-S", quantity: 1 },
       { productId: "smile-dog", variantId: "smile-XXL", quantity: 1 },
       { productId: "missing", variantId: "smile-S", quantity: 1 },
-      { productId: "russian-sleep-experiment", variantId: "sleep-S", quantity: -1 },
+      { productId: "tung-tung-tapes", variantId: "tapes-S", quantity: -1 },
     ]));
     expect(restored).toHaveLength(1);
     expect(restored[0].quantity).toBe(5);
@@ -72,11 +72,11 @@ describe("standalone demo", () => {
     const available = screen.getByRole("region", { name: "Available collections" });
     const previous = screen.getByRole("region", { name: "Previous collections" });
     expect(within(available).getAllByRole("button")).toHaveLength(1);
-    expect(within(previous).getAllByRole("button")).toHaveLength(2);
+    expect(within(previous).getAllByRole("button")).toHaveLength(1);
     expect(within(previous).getByRole("button", { name: "Explore The SCP Collection" })).toBeTruthy();
-    expect(within(previous).getByRole("button", { name: "Explore The Tung Tung Tapes Collection" })).toBeTruthy();
+    expect(screen.queryByRole("button", { name: "Explore The Tung Tung Tapes Collection" })).toBeNull();
     fireEvent.click(within(available).getByRole("button", { name: "Explore The Creepypasta Collection" }));
-    for (const name of ["Smile Dog", "Russian Sleep Experiment", "Captain Clark"]) {
+    for (const name of ["Smile Dog", "Tung Tung Tapes", "Captain Clark"]) {
       expect(screen.getByRole("button", { name: `View ${name}` })).toBeTruthy();
     }
     fireEvent.click(screen.getByRole("link", { name: "About" }));
