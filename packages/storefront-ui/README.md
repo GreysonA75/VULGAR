@@ -1,6 +1,6 @@
 # @vulgar/storefront-ui
 
-A standalone React + TypeScript presentation package for VULGAR. Eight page components, scoped CSS Modules, local fonts, original provisional artwork, and a standalone storefront demo. The presentation library has no router dependency, requests, storage, checkout, or scheduling. The public API is versioned at **0.1.0**.
+A standalone React + TypeScript presentation package for VULGAR. Eight page components, scoped CSS Modules, local fonts, text-only product placeholders, and a standalone storefront demo. The presentation library has no router dependency, requests, storage, checkout, or scheduling. The public API is versioned at **0.1.0**.
 
 ## Run and integrate
 
@@ -25,7 +25,7 @@ import '@vulgar/storefront-ui/styles.css';
 
 Wrap exactly one page view in `SiteShell` to provide theme tokens, navigation, main landmark, skip link, and footer. Import the CSS once in the application's global layout. The built ES module preserves `"use client"` for React server-component consumers. CSS Modules are compiled; the consumer does not need a CSS Modules transform for this package. The generated `.d.ts` files preserve exact contracts.
 
-Copy approved files from `assets/` into the application's public asset directory, or import their exported package asset subpaths using the application's bundler. Pass the resulting URLs as `heroImage`, `image`, or `product.images`. **There are no hard-coded production image paths in the components.** The `/assets/…` paths belong only to the local preview. Fonts are embedded in the built CSS; no Google Fonts request is made. Preserve `assets/FONT-LICENSE.txt` when redistributing fonts.
+Copy approved files from `assets/` into the application's public asset directory, or import their exported package asset subpaths using the application's bundler. Pass the resulting URLs as `heroImage`, `image`, or `product.images`. **There are no hard-coded production image paths in the components.** The `/assets/…` paths belong only to the local preview. Fonts are embedded in the built CSS; no Google Fonts request is made. Preserve `assets/PIXELIFY-LICENSE.txt` when redistributing fonts.
 
 ```tsx
 <SiteShell
@@ -34,7 +34,6 @@ Copy approved files from `assets/` into the application's public asset directory
   onNavigate={navigate} onCartOpen={openCart}
 >
   <HomeView
-    heroImage="/vulgar/forest-signal.png"
     featuredProducts={featuredProducts}
     currentDrop={currentDrop} pastDrops={pastDrops}
     onShop={() => navigate('shop')} onProductSelect={openProduct}
@@ -62,12 +61,12 @@ The identifiers above are supplied by the application. `preview/main.tsx` contai
 | Export | Purpose |
 | --- | --- |
 | `SiteShell` | Responsive navigation, global theme wrapper, footer |
-| `HomeView` | Hero, current collection, products, creator editorial, archive previews |
+| `HomeView` | Compact product grid; no hero or editorial sections |
 | `ShopView` | Controlled catalog filters, search, sort, and empty state |
 | `ProductView` | Controlled gallery, variants, quantity, purchase presentation, related products |
 | `CartView` | Full bag page, supplied totals, quantity/removal controls, unavailable checkout |
 | `DropView` | Draft, upcoming, live, and ended collection presentation |
-| `ArchiveView` | Staggered desktop archive and stacked mobile cards |
+| `ArchiveView` | Two-column desktop archive and stacked mobile cards |
 | `AboutView` | Verified channel identity and creator links |
 | `ProductCard`, `CollectionCard` | Reusable callback-driven cards |
 | `QuantityControl` | Controlled increment/decrement presentation |
@@ -266,15 +265,17 @@ export type AboutViewProps = {
 
 ## Styling and accessibility
 
-Theme variables are scoped to the shell (see `docs/brand/DESIGN_SYSTEM.md`). No reset touches elements outside it. Set application body margin to zero in the consuming application. Display text uses bundled Bodoni Moda; body text uses Arial/Helvetica; metadata uses Courier New. Small uppercase labels are secondary, never the only place essential product information appears.
+Theme variables are scoped to the shell (see `docs/brand/DESIGN_SYSTEM.md`). No reset touches elements outside it. Set application body margin to zero in the consuming application. Display text uses bundled Pixelify Sans; body text uses Arial/Helvetica; metadata uses Courier New. Small uppercase labels are secondary, never the only place essential product information appears.
 
 Keyboard focus is explicit. All buttons have accessible names, variants use `aria-pressed`, disabled variants use native disabled controls, and announcements use `role="status"`. Product galleries use labeled buttons. Empty image alt text is reserved for decorative images. Hover motion is disabled by `prefers-reduced-motion`; no blinking, autoplay, canvas effects, or continuous animation is used.
 
-Media breakpoints: 1100, 760, 560, and 359px, with a 1600px wide-screen refinement. Catalogs use three columns on desktop and two on mobile; product detail and cart become a single column. No forced viewport overflow is used. Test in the consuming application after integration, especially if its own global reset changes fonts, buttons, or SVGs.
+Media breakpoints: 900, 680, 480, and 359px. Catalogs use three columns on desktop and two on mobile; product detail and cart become a single column. No forced viewport overflow is used. Test in the consuming application after integration, especially if its own global reset changes fonts, buttons, or SVGs.
 
 ## Artwork status
 
-The creator's identity, tagline, and destinations were verified against public profiles. All campaign imagery and apparel mockups in this package are **provisional original art**, not approved merchandise. Do not ship demo names, prices, availability, countdowns, or drops as actual catalog data. See `docs/brand/ASSET_MANIFEST.md`, `RESEARCH.md`, and `DESIGN_STATUS.md` for provenance, generation prompts, and verification limits.
+The demo has no AI illustrations, campaign images, or garment mockups. Smile Dog, Russian Sleep Experiment, and Captain Clark use plain text SVG placeholders. Final imagery must be supplied or sourced with permission. Names, prices, sizes, availability, and collections are demo data; ordering is closed.
+
+Pixelify Sans is an open-license interim choice in the pixel/technical direction requested by the user. Neue Pixel and Ghosttech files were not supplied. The legacy optional hero/editorial props remain accepted for API compatibility, but HomeView and AboutView no longer render them.
 
 ## Share the demo on GitHub Pages
 

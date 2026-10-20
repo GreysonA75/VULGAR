@@ -48,7 +48,7 @@ describe("presentational contracts", () => {
       ).disabled,
     ).toBe(true);
     fireEvent.click(screen.getByRole("button", { name: "M" }));
-    expect(select).toHaveBeenCalledWith("mask-M");
+    expect(select).toHaveBeenCalledWith("smile-M");
     expect(
       (
         screen.getByRole("button", {
@@ -59,7 +59,7 @@ describe("presentational contracts", () => {
     rerender(
       <ProductView
         {...productProps}
-        selectedVariantId="mask-M"
+        selectedVariantId="smile-M"
         canAddToCart
         onAddToCart={add}
       />,
@@ -75,7 +75,7 @@ describe("presentational contracts", () => {
           {...productProps}
           product={{ ...products[0], status }}
           canAddToCart
-          selectedVariantId="mask-M"
+          selectedVariantId="smile-M"
         />,
       );
       expect(
@@ -93,6 +93,7 @@ describe("presentational contracts", () => {
       <ProductView
         {...productProps}
         displayPriceCents={4250}
+        product={{ ...products[0], images: ["front.svg", "back.svg"] }}
         onImageChange={image}
       />,
     );
@@ -137,7 +138,7 @@ describe("presentational contracts", () => {
           {
             key: "line-1",
             product: products[0],
-            variantId: "mask-M",
+            variantId: "smile-M",
             quantity: 1,
           },
         ]}
@@ -153,7 +154,7 @@ describe("presentational contracts", () => {
     expect(screen.getByText("$56.78")).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: /Increase quantity/ }));
     expect(change).toHaveBeenCalledWith("line-1", 2);
-    fireEvent.click(screen.getByRole("button", { name: /Remove The witness/ }));
+    fireEvent.click(screen.getByRole("button", { name: /Remove Smile Dog/ }));
     expect(remove).toHaveBeenCalledWith("line-1");
     expect(
       (
@@ -284,19 +285,10 @@ describe("presentational contracts", () => {
     rerender(<Artwork src="new.png" alt="A sample" />);
     expect(screen.getByRole("img").getAttribute("src")).toBe("new.png");
   });
-  it("renders the editorial pages, navigates archive cards, and exposes real creator URLs", () => {
+  it("navigates archive cards and exposes real creator URLs", () => {
     const select = vi.fn();
     const { unmount } = render(
-      <HomeView
-        featuredProducts={[]}
-        currentDrop={drops[0]}
-        pastDrops={[drops[1]]}
-        onShop={noop}
-        onProductSelect={noop}
-        onDropSelect={select}
-        onArchive={noop}
-        onAbout={noop}
-      />,
+      <ArchiveView drops={[drops[1]]} onDropSelect={select} onShop={noop} />,
     );
     fireEvent.click(screen.getByRole("button", { name: "Explore Dead air" }));
     expect(select).toHaveBeenCalledWith(drops[1]);

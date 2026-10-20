@@ -46,7 +46,7 @@ export function StorefrontDemo() {
   useEffect(() => saveCart(cart), [cart]);
   useEffect(() => {
     const title = page === "product" ? product.name : page === "drop" ? drop.title
-      : { home: "Reality is darker than fiction", shop: "The collection", cart: "Your bag", archive: "The archive", about: "About" }[page];
+      : { home: "Shop", shop: "The collection", cart: "Your bag", archive: "The archive", about: "About" }[page];
     document.title = `${title} — VULGAR`;
     setMenu(false);
     setFeedback("");
@@ -116,11 +116,11 @@ export function StorefrontDemo() {
         archive: routeHref({ page: "archive" }), about: routeHref({ page: "about" }),
       }}
       cartHref={routeHref({ page: "cart" })}
-      footerNote="DEMO STORE / CONCEPT PRODUCTS. ORDERING IS NOT OPEN."
+      footerNote="Demo / orders closed"
     >
       {page === "home" && (
         <HomeView
-          heroImage={`${import.meta.env.BASE_URL}assets/forest-signal.png`}
+
           featuredProducts={products}
           currentDrop={drops[0]}
           pastDrops={drops.filter((d) => d.status === "ended")}
@@ -182,12 +182,12 @@ export function StorefrontDemo() {
             {
               title: "Design & fit",
               content:
-                "Visual concept only. Fabric, measurements, print method, and final fit will be provided with approved merchandise.",
+                "Placeholder only. Final fit and measurements to follow.",
             },
             {
               title: "Shipping & care",
               content:
-                "Shipping and care details are not yet available. This preview does not take orders.",
+                "Orders are closed during this preview.",
             },
           ]}
         />
@@ -234,7 +234,7 @@ export function StorefrontDemo() {
       )}
       {page === "about" && (
         <AboutView
-          image={`${import.meta.env.BASE_URL}assets/forest-signal.png`}
+
           onShop={() => navigate("shop")}
         />
       )}

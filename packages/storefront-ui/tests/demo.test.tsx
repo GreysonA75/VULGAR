@@ -13,20 +13,20 @@ afterEach(() => { cleanup(); vi.restoreAllMocks(); });
 
 describe("standalone demo", () => {
   it("preserves the Pages directory in shareable URLs and handles invalid routes", () => {
-    expect(routeHref({ page: "product", slug: "demo-root" })).toBe("/VULGAR/?view=product&product=demo-root");
-    expect(readRoute("?view=product&product=demo-root")).toEqual({ page: "product", slug: "demo-root" });
+    expect(routeHref({ page: "product", slug: "russian-sleep-experiment" })).toBe("/VULGAR/?view=product&product=russian-sleep-experiment");
+    expect(readRoute("?view=product&product=russian-sleep-experiment")).toEqual({ page: "product", slug: "russian-sleep-experiment" });
     expect(readRoute("?view=unknown")).toEqual({ page: "home" });
   });
 
   it("restores only valid catalog entries and clamps merged quantities to stock", () => {
     expect(restoreCart("broken")).toEqual([]);
     const restored = restoreCart(JSON.stringify([
-      { productId: "demo-mask", variantId: "mask-S", quantity: 4, priceCents: 1 },
-      { productId: "demo-mask", variantId: "mask-S", quantity: 4 },
-      { productId: "demo-forest", variantId: "forest-S", quantity: 1 },
-      { productId: "demo-mask", variantId: "mask-XXL", quantity: 1 },
-      { productId: "missing", variantId: "mask-S", quantity: 1 },
-      { productId: "demo-root", variantId: "root-S", quantity: -1 },
+      { productId: "smile-dog", variantId: "smile-S", quantity: 4, priceCents: 1 },
+      { productId: "smile-dog", variantId: "smile-S", quantity: 4 },
+      { productId: "captain-clark", variantId: "captain-S", quantity: 1 },
+      { productId: "smile-dog", variantId: "smile-XXL", quantity: 1 },
+      { productId: "missing", variantId: "smile-S", quantity: 1 },
+      { productId: "russian-sleep-experiment", variantId: "sleep-S", quantity: -1 },
     ]));
     expect(restored).toHaveLength(1);
     expect(restored[0].quantity).toBe(5);
@@ -34,7 +34,7 @@ describe("standalone demo", () => {
   });
 
   it("persists the shopping flow across remounts and prevents adding beyond stock", () => {
-    history.replaceState(null, "", "/VULGAR/?view=product&product=demo-mask");
+    history.replaceState(null, "", "/VULGAR/?view=product&product=smile-dog");
     const mounted = render(<StorefrontDemo />);
     fireEvent.click(screen.getByRole("button", { name: "S" }));
     for (let i = 0; i < 5; i++) fireEvent.click(screen.getByRole("button", { name: "Add to bag" }));
@@ -48,7 +48,7 @@ describe("standalone demo", () => {
     render(<StorefrontDemo />);
     expect(screen.getByRole("link", { name: "Bag, 5 items" })).toBeTruthy();
     expect((screen.getByRole("button", { name: /Increase quantity for/ }) as HTMLButtonElement).disabled).toBe(true);
-    fireEvent.click(screen.getByRole("button", { name: /Remove The witness/ }));
+    fireEvent.click(screen.getByRole("button", { name: /Remove Smile Dog/ }));
     expect(screen.getByRole("heading", { name: "Nothing here. Yet." })).toBeTruthy();
     expect(JSON.parse(localStorage.getItem(cartStorageKey)!)).toEqual([]);
   });
@@ -58,8 +58,8 @@ describe("standalone demo", () => {
     history.replaceState(null, "", "/VULGAR/?view=drop&drop=demo-000");
     act(() => window.dispatchEvent(new PopStateEvent("popstate")));
     expect(screen.getByRole("heading", { level: 1 }).textContent).toBe("Dead air");
-    expect(screen.getByText("No signal / bone")).toBeTruthy();
-    expect(screen.queryByText("The witness / washed black")).toBeNull();
+    expect(screen.getByText("Captain Clark")).toBeTruthy();
+    expect(screen.queryByText("Smile Dog")).toBeNull();
     history.replaceState(null, "", "/VULGAR/?view=about");
     act(() => window.dispatchEvent(new PopStateEvent("popstate")));
     expect(document.title).toBe("About — VULGAR");

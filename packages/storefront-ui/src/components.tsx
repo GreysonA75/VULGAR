@@ -239,7 +239,7 @@ export function SiteShell({
           aria-label="Main navigation"
           className={`${s.navigation} ${menuOpen ? s.navigationOpen : ""}`}
         >
-          {(["shop", "archive", "about"] as const).map((item) => (
+          {(["shop", "about"] as const).map((item) => (
             <a
               key={item}
               href={paths[item]}
@@ -272,21 +272,8 @@ export function SiteShell({
       </main>
       <footer className={s.footer}>
         <div className={s.footerTop}>
-          <BrandIcon />
           <p>{footerNote}</p>
           <CreatorNavigation links={creatorLinks} />
-        </div>
-        <a
-          href={paths.home}
-          onClick={(e) => navClick(e, () => navigate("home"))}
-          className={s.footerWordmark}
-          aria-label="Vulgar home"
-        >
-          <Wordmark />
-        </a>
-        <div className={s.footerBottom}>
-          <span>VULGAR / INDEPENDENT MERCHANDISE</span>
-          <span>FROM THE OTHER SIDE OF THE SCREEN.</span>
         </div>
       </footer>
     </div>
@@ -315,15 +302,9 @@ export function ProductCard({
           {product.images[1] && (
             <Artwork src={product.images[1]} className={s.productAlternate} />
           )}
-          <span className={s.cardIndex}>
-            [{String(index + 1).padStart(2, "0")}]
-          </span>
           {product.status !== "available" && (
             <span className={s.badge}>{productStatuses[product.status]}</span>
           )}
-          <span className={s.cardArrow} aria-hidden="true">
-            ↗
-          </span>
         </div>
         <div className={s.productMeta}>
           <h3>{product.name}</h3>
@@ -391,129 +372,16 @@ export type HomeViewProps = ProductNavigation & {
   onAbout: () => void;
   creatorLinks?: CreatorLinks;
 };
-export function HomeView({
-  heroImage,
-  heroImageAlt = "A distant silhouette in a dark forest",
-  featuredProducts,
-  currentDrop,
-  pastDrops = [],
-  onShop,
-  onProductSelect,
-  onDropSelect,
-  onArchive,
-  onAbout,
-  creatorLinks,
-}: HomeViewProps) {
-  const heroId = useId();
+export function HomeView({ featuredProducts, onProductSelect }: HomeViewProps) {
   return (
-    <>
-      <section className={s.hero} aria-labelledby={heroId}>
-        <Artwork
-          src={heroImage}
-          alt={heroImageAlt}
-          className={s.heroImage}
-          eager
-        />
-        <div className={s.heroShade} />
-        <div className={s.heroTop}>
-          <span className={s.eyebrow}>INDEPENDENT MERCHANDISE</span>
-          <span className={s.eyebrow}>EST. IN THE DARK</span>
-        </div>
-        <h1 id={heroId} className={s.heroTitle}>
-          <Wordmark />
-        </h1>
-        <div className={s.heroBottom}>
-          <div>
-            <p className={s.heroTagline}>
-              REALITY IS DARKER
-              <br />
-              THAN FICTION.
-            </p>
-            <p className={s.heroSmall}>For those who look a little closer.</p>
-          </div>
-          <Button
-            onClick={currentDrop ? () => onDropSelect(currentDrop) : onShop}
-          >
-            {currentDrop?.status === "upcoming"
-              ? "Explore the next drop"
-              : "Enter the collection"}{" "}
-            <Arrow />
-          </Button>
-        </div>
-        <span className={s.heroRegistration} aria-hidden="true">
-          V / 001 — TRANSMISSION RECEIVED
-        </span>
-      </section>
-      <div className={s.signalStrip}>
-        <span>VULGAR / OBJECTS FROM THE DARK</span>
-        <span aria-hidden="true">✳</span>
-        <span>REALITY IS DARKER THAN FICTION.</span>
-      </div>
-      <section className={s.section}>
-        <SectionHeading
-          eyebrow={
-            currentDrop
-              ? `${dropStatuses[currentDrop.status]} / ${currentDrop.title}`
-              : "THE COLLECTION"
-          }
-          title="Wear what stays with you."
-          action="Shop all"
-          onAction={onShop}
-        />
-        {featuredProducts.length ? (
-          <ProductGrid
-            products={featuredProducts}
-            onProductSelect={onProductSelect}
-          />
-        ) : (
-          <EmptyState title="Something is taking shape.">
-            New pieces will appear here.
-          </EmptyState>
-        )}
-      </section>
-      <section className={s.editorial}>
-        <div className={s.editorialArt}>
-          <Artwork src={heroImage} alt="" />
-          <span className={s.registration}>FIG. 01 / BEYOND THE VISIBLE</span>
-        </div>
-        <div className={s.editorialCopy}>
-          <p className={s.eyebrow}>A WORLD BEYOND THE SCREEN</p>
-          <h2>
-            Some things
-            <br />
-            stay with you.
-          </h2>
-          <p>
-            The obscure. The unsettling. The things you find when you look a
-            little further. An extension of the world of Vulgar.
-          </p>
-          <Button quiet onClick={onAbout}>
-            About Vulgar <Arrow />
-          </Button>
-          <CreatorNavigation links={creatorLinks} />
-        </div>
-      </section>
-      {pastDrops.length > 0 && (
-        <section className={s.section}>
-          <SectionHeading
-            eyebrow="PREVIOUS TRANSMISSIONS"
-            title="Nothing disappears."
-            action="Visit the archive"
-            onAction={onArchive}
-          />
-          <div className={s.archivePreview}>
-            {pastDrops.slice(0, 2).map((drop, i) => (
-              <CollectionCard
-                key={drop.id}
-                drop={drop}
-                index={i}
-                onSelect={onDropSelect}
-              />
-            ))}
-          </div>
-        </section>
+    <section className={`${s.section} ${s.catalog}`}>
+      <h1 className={s.catalogTitle}>Shop</h1>
+      {featuredProducts.length ? (
+        <ProductGrid products={featuredProducts} onProductSelect={onProductSelect} />
+      ) : (
+        <EmptyState title="No products yet.">Check back soon.</EmptyState>
       )}
-    </>
+    </section>
   );
 }
 export type ShopViewProps = ProductNavigation & {
@@ -546,15 +414,7 @@ export function ShopView({
   const id = useId();
   return (
     <section className={s.section}>
-      <div className={s.pageHeading}>
-        <p className={s.eyebrow}>VULGAR / THE COLLECTION</p>
-        <h1>
-          Objects from
-          <br />
-          <em>the dark.</em>
-        </h1>
-        <p>Wear what stays with you.</p>
-      </div>
+      <div className={s.pageHeading}><h1>Shop</h1></div>
       <div className={s.shopToolbar}>
         <div className={s.filters} role="group" aria-label="Filter products">
           {filters.map((f) => (
@@ -804,10 +664,7 @@ export function ProductView({
       </div>
       {relatedProducts.length > 0 && (
         <section className={s.related}>
-          <SectionHeading
-            eyebrow="FROM THE SAME WORLD"
-            title="Look a little further."
-          />
+          <SectionHeading title="More pieces" />
           <ProductGrid
             products={relatedProducts}
             onProductSelect={onProductSelect}
@@ -843,7 +700,7 @@ export function CartView({
   return (
     <section className={s.section}>
       <div className={s.pageHeading}>
-        <p className={s.eyebrow}>YOUR SELECTION</p>
+
         <h1>
           The bag
           <span className={s.headingCount}>
@@ -908,7 +765,7 @@ export function CartView({
               </article>
             ))}
             <Button quiet onClick={onContinueShopping}>
-              ← Continue exploring
+              ← Continue shopping
             </Button>
           </div>
           <aside className={s.cartSummary} aria-label="Bag summary">
@@ -931,7 +788,7 @@ export function CartView({
           action="Explore the collection"
           onAction={onContinueShopping}
         >
-          A little room for something that stays with you.
+          Choose a piece to add to your bag.
         </EmptyState>
       )}
       <p className={s.feedback} role="status">
@@ -960,13 +817,6 @@ export function DropView({
   return (
     <>
       <section className={s.dropHero}>
-        <Artwork
-          src={drop.heroImage}
-          alt=""
-          className={s.dropHeroImage}
-          eager
-        />
-        <div className={s.dropShade} />
         <div className={s.dropContent}>
           <p className={s.eyebrow}>
             <span className={s.statusDot} /> {dropStatuses[drop.status]} /
@@ -1002,11 +852,7 @@ export function DropView({
       <section className={s.section}>
         <SectionHeading
           eyebrow={dropStatuses[drop.status]}
-          title={
-            drop.status === "ended"
-              ? "The remaining traces."
-              : "Inside the collection."
-          }
+          title="Products"
         />
         {products.length ? (
           <ProductGrid products={products} onProductSelect={onProductSelect} />
@@ -1052,9 +898,6 @@ export function CollectionCard({
             {String(index + 1).padStart(2, "0")}
           </span>
           <span className={s.badge}>{dropStatuses[drop.status]}</span>
-          <span className={s.cardArrow} aria-hidden="true">
-            ↗
-          </span>
         </div>
         <div className={s.collectionMeta}>
           <h3>{drop.title}</h3>
@@ -1078,15 +921,7 @@ export function ArchiveView({
 }: ArchiveViewProps) {
   return (
     <section className={s.section}>
-      <div className={s.pageHeading}>
-        <p className={s.eyebrow}>VULGAR / PREVIOUS TRANSMISSIONS</p>
-        <h1>
-          Nothing
-          <br />
-          <em>disappears.</em>
-        </h1>
-        <p>A record of what came before.</p>
-      </div>
+      <div className={s.pageHeading}><h1>Archive</h1></div>
       {drops.length ? (
         <div className={s.archiveGrid}>
           {drops.map((drop, i) => (
@@ -1117,46 +952,14 @@ export type AboutViewProps = {
   creatorLinks?: CreatorLinks;
   onShop: () => void;
 };
-export function AboutView({
-  image,
-  imageAlt = "An indistinct silhouette beyond a dark forest",
-  creatorLinks,
-  onShop,
-}: AboutViewProps) {
+export function AboutView({ creatorLinks, onShop }: AboutViewProps) {
   return (
-    <>
-      <section className={s.aboutIntro}>
-        <p className={s.eyebrow}>THE WORLD OF VULGAR</p>
-        <h1>
-          Reality is darker
-          <br />
-          than <em>fiction.</em>
-        </h1>
-        <div className={s.aboutColumns}>
-          <p>
-            Vulgar explores lesser-known, disturbing content from around the
-            internet.
-          </p>
-          <div>
-            <p>
-              Beyond the screen, the same curiosity takes a different form.
-              Objects, images, and things that stay with you.
-            </p>
-            <CreatorNavigation links={creatorLinks} />
-          </div>
-        </div>
-      </section>
-      <div className={s.aboutImage}>
-        <Artwork src={image} alt={imageAlt} />
-        <span className={s.registration}>V / THERE IS MORE TO SEE</span>
-      </div>
-      <section className={s.aboutOutro}>
-        <BrandIcon />
-        <h2>Look a little closer.</h2>
-        <Button onClick={onShop}>
-          Enter the collection <Arrow />
-        </Button>
-      </section>
-    </>
+    <section className={`${s.section} ${s.aboutIntro}`}>
+      <h1>About</h1>
+      <p>Vulgar explores the disturbing corners of the internet.</p>
+      <p>This is a storefront preview. Products and prices are placeholders.</p>
+      <CreatorNavigation links={creatorLinks} />
+      <Button quiet onClick={onShop}>Back to shop <Arrow /></Button>
+    </section>
   );
 }
