@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import {
   SiteShell,
-  HomeView,
   ShopView,
   ProductView,
   CartView,
@@ -25,7 +24,7 @@ export function StorefrontDemo() {
   const [quantity, setQuantity] = useState(1);
   const [image, setImage] = useState(0);
   const [search, setSearch] = useState("");
-  const [filter, setFilter] = useState("all");
+  const [onlyAvailable, setOnlyAvailable] = useState(false);
   const [sort, setSort] = useState("featured");
   const [cart, setCart] = useState<StoreCartLine[]>(loadCart);
   const [feedback, setFeedback] = useState("");
@@ -86,7 +85,7 @@ export function StorefrontDemo() {
     setFeedback(`Added to your bag — ${chosen.label}.`);
   };
   let filtered = products.filter((p) =>
-    (filter === "all" || p.status === filter) &&
+    (!onlyAvailable || (p.status === "available" && p.variants.some((v) => v.available && v.stock > 0))) &&
     `${p.name} ${p.description}`.toLowerCase().includes(search.trim().toLowerCase()),
   );
   if (sort === "price-low") filtered = [...filtered].sort((a, b) => a.priceCents - b.priceCents);
@@ -101,11 +100,7 @@ export function StorefrontDemo() {
   );
   return (
     <SiteShell
-      activePage={
-        ["home", "shop", "archive", "about"].includes(page)
-          ? (page as "home" | "shop" | "archive" | "about")
-          : undefined
-      }
+      activePage={page === "about" ? "about" : ["home", "shop", "archive"].includes(page) ? "shop" : undefined}
       cartCount={cart.reduce((n, l) => n + l.quantity, 0)}
       menuOpen={menu}
       onMenuOpenChange={setMenu}
@@ -118,31 +113,22 @@ export function StorefrontDemo() {
       cartHref={routeHref({ page: "cart" })}
       footerNote=""
     >
-      {page === "home" && (
-        <HomeView
-
-          featuredProducts={products}
-          currentDrop={drops[0]}
-          pastDrops={drops.filter((d) => d.status === "ended")}
-          onShop={() => navigate("shop")}
-          onProductSelect={selectProduct}
-          onDropSelect={selectDrop}
-          onArchive={() => navigate("archive")}
-          onAbout={() => navigate("about")}
-        />
-      )}
-      {page === "shop" && (
+      {["home", "shop", "archive"].includes(page) && (
         <ShopView
           products={filtered}
           search={search}
           onSearchChange={setSearch}
-          filter={filter}
+          filter={page === "archive" ? "collections" : "all"}
           filters={[
-            { value: "all", label: "All pieces" },
-            { value: "available", label: "Available" },
-            { value: "sold_out", label: "Sold out" },
+            { value: "all", label: "All Pieces" },
+            { value: "collections", label: "Collections" },
           ]}
-          onFilterChange={setFilter}
+          onFilterChange={(value) => navigate(value === "collections" ? "archive" : "shop")}
+          onlyAvailable={onlyAvailable}
+          onOnlyAvailableChange={setOnlyAvailable}
+          collectionContent={page === "archive" ? (
+            <ArchiveView drops={drops} onlyAvailable={onlyAvailable} embedded onDropSelect={selectDrop} onShop={() => navigate("shop")} />
+          ) : undefined}
           sort={sort}
           sortOptions={[
             { value: "featured", label: "Featured" },
@@ -152,7 +138,7 @@ export function StorefrontDemo() {
           onSortChange={setSort}
           onClearFilters={() => {
             setSearch("");
-            setFilter("all");
+            setOnlyAvailable(false);
           }}
           onProductSelect={selectProduct}
         />
@@ -220,13 +206,6 @@ export function StorefrontDemo() {
           products={products.filter((p) => p.dropId === drop.id)}
           onProductSelect={selectProduct}
           onArchive={() => navigate("archive")}
-        />
-      )}
-      {page === "archive" && (
-        <ArchiveView
-          drops={drops}
-          onDropSelect={selectDrop}
-          onShop={() => navigate("shop")}
         />
       )}
       {page === "about" && (

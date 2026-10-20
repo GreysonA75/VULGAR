@@ -215,3 +215,8 @@
 .collectionMeta > span { flex-shrink: 0; }
 .aboutIntro { text-align: center; padding-block: 100px; }
 .aboutIntro h1 { margin-bottom: 20px; }
+
+.browseControls { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+.availabilityToggle { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; cursor: pointer; font: 14px/1.5 var(--v-body); white-space: nowrap; }
+.availabilityToggle input { width: 15px; height: 15px; margin: 0; accent-color: var(--v-paper); cursor: pointer; }
+.embeddedCollections .collectionGroup:first-child { margin-top: 32px; }

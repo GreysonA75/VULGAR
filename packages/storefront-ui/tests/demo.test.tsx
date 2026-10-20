@@ -68,7 +68,7 @@ describe("standalone demo", () => {
 
   it("groups current and past collections and keeps the current collection complete", () => {
     render(<StorefrontDemo />);
-    fireEvent.click(screen.getByRole("link", { name: "Collections" }));
+    fireEvent.click(screen.getByRole("button", { name: "Collections" }));
     const available = screen.getByRole("region", { name: "Available collections" });
     const previous = screen.getByRole("region", { name: "Previous collections" });
     expect(within(available).getAllByRole("button")).toHaveLength(1);
@@ -84,6 +84,27 @@ describe("standalone demo", () => {
     expect(screen.getByRole("link", { name: "contact@vulgar.example" })).toBeTruthy();
     expect(screen.queryByText("Demo / orders closed")).toBeNull();
     expect(screen.queryByText("This is a storefront preview. Products and prices are placeholders.")).toBeNull();
+  });
+
+  it("filters products and collections independently of the selected shop tab", () => {
+    render(<StorefrontDemo />);
+    const navigation = screen.getByRole("navigation", { name: "Main navigation" });
+    expect(within(navigation).queryByRole("link", { name: "Collections" })).toBeNull();
+    expect(within(navigation).getByRole("link", { name: "Shop" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "All Pieces" }).getAttribute("aria-pressed")).toBe("true");
+    expect(screen.getByRole("button", { name: "View Captain Clark" })).toBeTruthy();
+    expect(screen.queryByRole("button", { name: "Sold out" })).toBeNull();
+    fireEvent.click(screen.getByRole("checkbox", { name: "Only show available" }));
+    expect(screen.queryByRole("button", { name: "View Captain Clark" })).toBeNull();
+    expect(screen.getByRole("button", { name: "View Smile Dog" })).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "Collections" }));
+    expect(screen.getByRole("button", { name: "Collections" }).getAttribute("aria-pressed")).toBe("true");
+    expect(screen.queryByRole("region", { name: "Previous collections" })).toBeNull();
+    expect(screen.getByRole("button", { name: "Explore The Creepypasta Collection" })).toBeTruthy();
+    fireEvent.click(screen.getByRole("checkbox", { name: "Only show available" }));
+    expect(screen.getByRole("region", { name: "Previous collections" })).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "All Pieces" }));
+    expect(screen.getByRole("button", { name: "View Captain Clark" })).toBeTruthy();
   });
 
   it("remains usable if browser storage is blocked", () => {

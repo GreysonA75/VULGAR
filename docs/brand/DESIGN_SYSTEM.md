@@ -2,7 +2,7 @@
 
 Updated 2026-10-20 following feedback: AI art only for shirts/mockups, no large headings, less text, and a simple shop inspired by the structure of [Isolation Man](https://www.isolationman.net/products).
 
-The homepage is a three-product grid below a compact centered wordmark. Navigation contains All Pieces, Collections, About, and Bag. The footer contains only the creator links. There is no hero, giant wordmark, campaign image, editorial section, or sales slogan.
+The homepage is a three-product grid below a compact centered wordmark. Main navigation contains Shop, About, and Bag. The shop toolbar contains All Pieces / Collections buttons and a native “Only show available” checkbox. The checkbox hides sold-out products in All Pieces and unavailable historical collections in Collections, preserving its state when switching tabs. The landing page uses this same shop browser. The footer contains only the creator links. There is no hero, giant wordmark, campaign image, editorial section, or sales slogan.
 
 ## Typography and color
 

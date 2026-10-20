@@ -239,7 +239,7 @@ describe("presentational contracts", () => {
     expect(button.getAttribute("aria-expanded")).toBe("true");
     fireEvent.keyDown(button, { key: "Escape" });
     expect(menu).toHaveBeenCalledWith(false);
-    fireEvent.click(screen.getByRole("link", { name: "All Pieces" }));
+    fireEvent.click(screen.getByRole("link", { name: "Shop" }));
     expect(nav).toHaveBeenCalledWith("shop");
     expect(screen.getByRole("link", { name: "Bag, 3 items" })).toBeTruthy();
   });
@@ -256,7 +256,7 @@ describe("presentational contracts", () => {
         Content
       </SiteShell>,
     );
-    fireEvent.click(screen.getByRole("link", { name: "All Pieces" }), {
+    fireEvent.click(screen.getByRole("link", { name: "Shop" }), {
       ctrlKey: true,
     });
     expect(nav).not.toHaveBeenCalled();

@@ -239,14 +239,14 @@ export function SiteShell({
           aria-label="Main navigation"
           className={`${s.navigation} ${menuOpen ? s.navigationOpen : ""}`}
         >
-          {(["shop", "archive", "about"] as const).map((item) => (
+          {(["shop", "about"] as const).map((item) => (
             <a
               key={item}
               href={paths[item]}
               aria-current={activePage === item ? "page" : undefined}
               onClick={(e) => navClick(e, () => navigate(item))}
             >
-              {{ shop: "All Pieces", archive: "Collections", about: "About" }[item]}
+              {{ shop: "Shop", about: "About" }[item]}
             </a>
           ))}
         </nav>
@@ -396,6 +396,9 @@ export type ShopViewProps = ProductNavigation & {
   onSortChange: (value: string) => void;
   onClearFilters: () => void;
   resultCount?: number;
+  onlyAvailable?: boolean;
+  onOnlyAvailableChange?: (value: boolean) => void;
+  collectionContent?: ReactNode;
 };
 export function ShopView({
   products,
@@ -410,13 +413,17 @@ export function ShopView({
   onClearFilters,
   resultCount = products.length,
   onProductSelect,
+  onlyAvailable = false,
+  onOnlyAvailableChange,
+  collectionContent,
 }: ShopViewProps) {
   const id = useId();
   return (
     <section className={s.section}>
-      <div className={s.pageHeading}><h1>All Pieces</h1></div>
+      <div className={s.pageHeading}><h1>Shop</h1></div>
       <div className={s.shopToolbar}>
-        <div className={s.filters} role="group" aria-label="Filter products">
+        <div className={s.browseControls}>
+        <div className={s.filters} role="group" aria-label="Browse shop">
           {filters.map((f) => (
             <button
               type="button"
@@ -428,7 +435,14 @@ export function ShopView({
             </button>
           ))}
         </div>
-        <div className={s.searchSort}>
+        {onOnlyAvailableChange && (
+          <label className={s.availabilityToggle}>
+            <input type="checkbox" checked={onlyAvailable} onChange={(event) => onOnlyAvailableChange(event.target.checked)} />
+            Only show available
+          </label>
+        )}
+        </div>
+        {!collectionContent && <div className={s.searchSort}>
           <label className={s.search}>
             <span className={s.srOnly}>Search products</span>
             <input
@@ -453,8 +467,9 @@ export function ShopView({
               </option>
             ))}
           </select>
-        </div>
+        </div>}
       </div>
+      {collectionContent ? collectionContent : <>
       <p className={s.resultCount} role="status">
         {resultCount} {resultCount === 1 ? "piece" : "pieces"}
       </p>
@@ -469,6 +484,7 @@ export function ShopView({
           Try another search or explore the full collection.
         </EmptyState>
       )}
+      </>}
     </section>
   );
 }
@@ -905,18 +921,22 @@ export type ArchiveViewProps = {
   releaseLabels?: Record<string, string>;
   onDropSelect: (drop: StoreDrop) => void;
   onShop: () => void;
+  embedded?: boolean;
+  onlyAvailable?: boolean;
 };
 export function ArchiveView({
   drops,
   releaseLabels = {},
   onDropSelect,
   onShop,
+  embedded = false,
+  onlyAvailable = false,
 }: ArchiveViewProps) {
-  const available = drops.filter((drop) => drop.status === "live" || drop.status === "upcoming");
+  const available = drops.filter((drop) => drop.status === "live" || (!onlyAvailable && drop.status === "upcoming"));
   const previous = drops.filter((drop) => drop.status === "ended");
   return (
-    <section className={s.section}>
-      <div className={s.pageHeading}><h1>Collections</h1></div>
+    <section className={embedded ? s.embeddedCollections : s.section}>
+      {!embedded && <div className={s.pageHeading}><h1>Collections</h1></div>}
       {drops.length ? (
         <>
           <section className={s.collectionGroup} aria-label="Available collections">
@@ -925,12 +945,12 @@ export function ArchiveView({
               <CollectionCard key={drop.id} drop={drop} releaseLabel={releaseLabels[drop.id]} onSelect={onDropSelect} />
             )) : <p>No collections are available right now.</p>}
           </section>
-          <section className={s.collectionGroup} aria-label="Previous collections">
+          {!onlyAvailable && <section className={s.collectionGroup} aria-label="Previous collections">
             <h2>Previous collections</h2>
             {previous.length ? previous.map((drop) => (
               <CollectionCard key={drop.id} drop={drop} onSelect={onDropSelect} />
             )) : <p>No previous collections.</p>}
-          </section>
+          </section>}
         </>
       ) : (
         <EmptyState title="The record begins here." action="View all pieces" onAction={onShop}>
